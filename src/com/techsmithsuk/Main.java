@@ -1,6 +1,5 @@
 package com.techsmithsuk;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,10 +9,11 @@ public class Main {
 
         Rule fizzRule = new Rule(3, "Fizz");
         Rule buzzRule = new Rule(5, "Buzz");
+        Rule bangRule = new Rule(7, "Bang");
 
-        List<Rule> rules = Arrays.asList(fizzRule, buzzRule);
+        List<Rule> rules = Arrays.asList(fizzRule, buzzRule, bangRule);
 
-	    for (int counter = 1; counter <= 100; counter++) {
+	    for (int counter = 1; counter <= 200; counter++) {
 	        System.out.println(getResponse(counter, rules));
         }
     }
