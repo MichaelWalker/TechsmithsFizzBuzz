@@ -1,26 +1,39 @@
 package com.techsmithsuk;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
+
+        Rule fizzRule = new Rule(3, "Fizz");
+        Rule buzzRule = new Rule(5, "Buzz");
+
+        List<Rule> rules = Arrays.asList(fizzRule, buzzRule);
+
 	    for (int counter = 1; counter <= 100; counter++) {
-	        System.out.println(getResponse(counter));
+	        System.out.println(getResponse(counter, rules));
         }
     }
 
-    private static String getResponse(int number) {
-        if (number % 3 == 0 && number % 5 == 0) {
-            return "FizzBuzz";
+    private static String getResponse(int number, List<Rule> rules) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Rule rule : rules) {
+            if (rule.matches(number)) {
+                stringBuilder.append(rule.getLabel());
+            }
         }
 
-        if (number % 3 == 0) {
-            return "Fizz";
+        if (stringBuilder.length() == 0) {
+            return getNumberAsString(number);
         }
 
-        if (number % 5 == 0) {
-            return "Buzz";
-        }
+        return stringBuilder.toString();
+    }
 
+    private static String getNumberAsString(int number) {
         return String.format("%d", number);
     }
 }
