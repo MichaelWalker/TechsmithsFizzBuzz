@@ -3,6 +3,8 @@ package com.techsmithsuk;
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
+	    for (int counter = 1; counter <= 100; counter++) {
+	        System.out.println(counter);
+        }
     }
 }
