@@ -1,5 +1,6 @@
 package com.techsmithsuk;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,34 +15,32 @@ public class Main {
 
         List<Rule> rules = Arrays.asList(fizzRule, fezzRule, buzzRule, bangRule);
 
-	    for (int counter = 1; counter <= 200; counter++) {
+	    for (Integer counter = 1; counter <= 200; counter++) {
 	        System.out.println(getResponse(counter, rules));
         }
     }
 
-    private static String getResponse(int number, List<Rule> rules) {
+    private static String getResponse(Integer number, List<Rule> rules) {
+        List<String> sections = new ArrayList<>();
+
         if (number % 11 == 0) {
             if (number % 13 == 0) {
-                return "FezzBong";
+                sections.add("Fezz");
             }
-            return "Bong";
+            sections.add("Bong");
         }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Rule rule : rules) {
-            if (rule.matches(number)) {
-                stringBuilder.append(rule.getLabel());
+        else {
+            for (Rule rule : rules) {
+                if (rule.matches(number)) {
+                    sections.add(rule.getLabel());
+                }
             }
         }
 
-        if (stringBuilder.length() == 0) {
-            return getNumberAsString(number);
+        if (sections.isEmpty()) {
+            return number.toString();
         }
 
-        return stringBuilder.toString();
-    }
-
-    private static String getNumberAsString(int number) {
-        return String.format("%d", number);
+        return String.join("", sections);
     }
 }
