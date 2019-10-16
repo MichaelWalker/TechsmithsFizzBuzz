@@ -19,8 +19,9 @@ public class Main {
 
     public static void main(String[] args) {
         List<Rule> rules = getRulesFromArgs(args);
+        Integer reverse = getReverseFactorFromArgs(args);
         IntStream.rangeClosed(1, 300)
-                .mapToObj(number -> getResponse(number, rules))
+                .mapToObj(number -> getResponse(number, rules, reverse))
                 .forEach(System.out::println);
     }
 
@@ -37,7 +38,18 @@ public class Main {
         return commandLineRules.isEmpty() ? DEFAULT_RULES : commandLineRules;
     }
 
-    private static String getResponse(Integer number, List<Rule> rules) {
+    private static Integer getReverseFactorFromArgs(String[] args) {
+        // Expects an input of the form `--reverse=17`
+        for (String arg : args) {
+            if (arg.startsWith("--reverse=")) {
+                String value = arg.replace("--reverse=", "");
+                return Integer.parseInt(value);
+            }
+        }
+        return null;
+    }
+
+    private static String getResponse(Integer number, List<Rule> rules, Integer reverseFactor) {
         List<String> sections = new ArrayList<>();
 
         if (number % 11 == 0) {
@@ -58,7 +70,7 @@ public class Main {
             return number.toString();
         }
 
-        if (number % 17 == 0) {
+        if (reverseFactor != null && number % reverseFactor == 0) {
             Collections.reverse(sections);
         }
 
