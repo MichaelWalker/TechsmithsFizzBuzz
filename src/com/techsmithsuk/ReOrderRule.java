@@ -2,6 +2,7 @@ package com.techsmithsuk;
 
 
 import java.util.Collection;
+import java.util.List;
 
 public class ReOrderRule {
     private String label;
@@ -10,6 +11,15 @@ public class ReOrderRule {
     public ReOrderRule(String label, Collection<String> goesBefore) {
         this.label = label;
         this.goesBefore = goesBefore;
+    }
+
+    public static ReOrderRule fromString(String reorderString) {
+        String[] parts = reorderString.split("=>");
+        String label = parts[0];
+
+        String goesBeforeString = parts[1];
+        Collection<String> goesBefore = List.of(goesBeforeString.split(":"));
+        return new ReOrderRule(label, goesBefore);
     }
 
     public String getLabel() {

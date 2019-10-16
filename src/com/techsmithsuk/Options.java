@@ -1,6 +1,8 @@
 package com.techsmithsuk;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,11 +16,13 @@ public class Options {
     private List<Rule> rules;
     private Integer reverseFactor;
     private String dominantSection;
+    private List<ReOrderRule> reOrderRules;
 
     public Options(String[] args) {
         this.rules = parseRules(args);
         this.reverseFactor = parseReverseFactor(args);
         this.dominantSection = parseDominantSection(args);
+        this.reOrderRules = parseReOrderRules(args);
     }
 
     public List<Rule> getRules() {
@@ -34,12 +38,24 @@ public class Options {
     }
 
     public List<ReOrderRule> getReorderRules() {
-        return List.of(
-                new ReOrderRule("FEZZ", List.of("BUZZ", "BANG", "BONG"))
-        );
+        return reOrderRules;
+    }
+
+    private List<ReOrderRule> parseReOrderRules(String[] args) {
+        // Expects an input of the form `--re-order=FEZZ=>BUZZ:BANG:BONG`
+
+        List<ReOrderRule> rules = new ArrayList<>();
+        for (String arg : args) {
+            if (arg.startsWith("--re-order=")) {
+                String reorderString = arg.replace("--re-order=", "");
+                rules.add(ReOrderRule.fromString(reorderString));
+            }
+        }
+        return rules;
     }
 
     private List<Rule> parseRules(String[] args) {
+        // Expects an input of the form `--rules=3=>FIZZ,5=>BUZZ`
         List<Rule> commandLineRules = Arrays.stream(args)
                 .filter(arg -> arg.startsWith("--rules="))
                 .map(arg -> arg.replace("--rules=", ""))
