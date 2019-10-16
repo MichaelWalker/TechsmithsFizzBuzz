@@ -10,8 +10,9 @@ public class Main {
         Rule fizzRule = new Rule(3, "Fizz");
         Rule buzzRule = new Rule(5, "Buzz");
         Rule bangRule = new Rule(7, "Bang");
+        Rule fezzRule = new Rule(13, "Fezz");
 
-        List<Rule> rules = Arrays.asList(fizzRule, buzzRule, bangRule);
+        List<Rule> rules = Arrays.asList(fizzRule, fezzRule, buzzRule, bangRule);
 
 	    for (int counter = 1; counter <= 200; counter++) {
 	        System.out.println(getResponse(counter, rules));
@@ -20,6 +21,9 @@ public class Main {
 
     private static String getResponse(int number, List<Rule> rules) {
         if (number % 11 == 0) {
+            if (number % 13 == 0) {
+                return "FezzBong";
+            }
             return "Bong";
         }
 
