@@ -1,8 +1,8 @@
 package com.techsmithsuk;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -14,20 +14,29 @@ public class Main {
     }
 
     private static String getResponse(Integer number, Options options) {
-        List<String> sections = options.getRules().stream()
-                .filter(rule -> rule.matches(number))
-                .map(Rule::getLabel)
-                .sorted((a, b) -> Comparisons.isDominant(a, b, options.getDominantSection()))
-                .collect(Collectors.toList());
+        List<String> sections = new ArrayList<>();
+        for (Rule rule : options.getRules()) {
+            if (rule.matches(number)) {
+                sections.add(rule.getLabel());
+            }
+        }
 
+        applyDominantSectionRules(sections, options.getDominantSection());
         applyReOrderRules(sections, options.getReorderRules());
-        sections = removeEntriesAfterDominantSection(sections, options.getDominantSection());
-        reverseSectionsIfRequired(sections, number, options.getReverseFactors());
+        removeEntriesAfterDominantSection(sections, options.getDominantSection());
+        applyReverseRules(sections, number, options.getReverseFactors());
 
         return sections.isEmpty() ? number.toString() : String.join("", sections);
     }
 
-    private static void reverseSectionsIfRequired(List<String> sections, Integer number, List<Integer> reverseFactors) {
+    private static void applyDominantSectionRules(List<String> sections, String dominantSection) {
+        if (sections.contains(dominantSection)) {
+            sections.remove(dominantSection);
+            sections.add(0, dominantSection);
+        }
+    }
+
+    private static void applyReverseRules(List<String> sections, Integer number, List<Integer> reverseFactors) {
         for (Integer factor : reverseFactors) {
             if (number % factor == 0) {
                 Collections.reverse(sections);
@@ -57,11 +66,11 @@ public class Main {
         sections.add(rule.getLabel());
     }
 
-    private static List<String> removeEntriesAfterDominantSection(List<String> sections, String dominantSection) {
+    private static void removeEntriesAfterDominantSection(List<String> sections, String dominantSection) {
         if (dominantSection == null || dominantSection.isBlank() || !sections.contains(dominantSection)) {
-            return sections;
+            return;
         }
         int indexOfDominantSection = sections.indexOf(dominantSection);
-        return sections.subList(0, indexOfDominantSection + 1);
+        sections.subList(indexOfDominantSection + 1, sections.size()).clear();
     }
 }
