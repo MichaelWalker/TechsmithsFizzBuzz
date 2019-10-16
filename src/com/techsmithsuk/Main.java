@@ -17,30 +17,23 @@ public class Main {
         List<String> sections = options.getRules().stream()
                 .filter(rule -> rule.matches(number))
                 .map(Rule::getLabel)
+                .sorted((a, b) -> Comparisons.isDominant(a, b, options.getDominantSection()))
                 .collect(Collectors.toList());
+
+        sections = removeEntriesAfterDominantSection(sections, options.getDominantSection());
 
         if (options.getReverseFactor() != null && number % options.getReverseFactor() == 0) {
             Collections.reverse(sections);
         }
 
-        if (options.getDominantSection() != null) {
-            sections.sort((a, b) -> Comparisons.isDominant(a, b, options.getDominantSection()));
-        }
-
-        return sections.isEmpty() ? number.toString() : renderOutput(sections, options.getDominantSection());
+        return sections.isEmpty() ? number.toString() : String.join("", sections);
     }
 
-    private static String renderOutput(List<String> sections, String dominantSection) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (String section : sections) {
-            stringBuilder.append(section);
-
-            if (section.equals(dominantSection)) {
-                return stringBuilder.toString();
-            }
+    private static List<String> removeEntriesAfterDominantSection(List<String> sections, String dominantSection) {
+        if (dominantSection == null || dominantSection.isBlank() || !sections.contains(dominantSection)) {
+            return sections;
         }
-
-        return stringBuilder.toString();
+        int indexOfDominantSection = sections.indexOf(dominantSection);
+        return sections.subList(0, indexOfDominantSection + 1);
     }
 }
