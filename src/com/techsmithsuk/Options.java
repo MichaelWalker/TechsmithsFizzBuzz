@@ -55,15 +55,15 @@ public class Options {
     }
 
     private List<Rule> parseRules(String[] args) {
-        // Expects an input of the form `--rules=3=>FIZZ,5=>BUZZ`
-        List<Rule> commandLineRules = Arrays.stream(args)
-                .filter(arg -> arg.startsWith("--rules="))
-                .map(arg -> arg.replace("--rules=", ""))
-                .flatMap(rulesString -> Stream.of(rulesString.split(",")))
-                .map(Rule::fromString)
-                .collect(Collectors.toList());
-
-        return commandLineRules.isEmpty() ? DEFAULT_RULES : commandLineRules;
+        // Expects an input of the form `--rule=3=>FIZZ`
+        List<Rule> rules = new ArrayList<>();
+        for (String arg : args) {
+            if (arg.startsWith("--rule=")) {
+                String ruleString = arg.replace("--rule=", "");
+                rules.add(Rule.fromString(ruleString));
+            }
+        }
+        return rules.isEmpty() ? DEFAULT_RULES : rules;
     }
 
     private Integer parseReverseFactor(String[] args) {
