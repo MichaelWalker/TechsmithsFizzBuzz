@@ -50,30 +50,15 @@ public class Main {
     }
 
     private static String getResponse(Integer number, List<Rule> rules, Integer reverseFactor) {
-        List<String> sections = new ArrayList<>();
-
-        if (number % 11 == 0) {
-            if (number % 13 == 0) {
-                sections.add("Fezz");
-            }
-            sections.add("Bong");
-        }
-        else {
-            for (Rule rule : rules) {
-                if (rule.matches(number)) {
-                    sections.add(rule.getLabel());
-                }
-            }
-        }
-
-        if (sections.isEmpty()) {
-            return number.toString();
-        }
+        List<String> sections = rules.stream()
+                .filter(rule -> rule.matches(number))
+                .map(Rule::getLabel)
+                .collect(Collectors.toList());
 
         if (reverseFactor != null && number % reverseFactor == 0) {
             Collections.reverse(sections);
         }
 
-        return String.join("", sections);
+        return sections.isEmpty() ? number.toString() : String.join("", sections);
     }
 }
