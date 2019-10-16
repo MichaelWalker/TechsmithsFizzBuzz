@@ -2,6 +2,7 @@ package com.techsmithsuk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -15,7 +16,7 @@ public class Main {
 
         List<Rule> rules = Arrays.asList(fizzRule, fezzRule, buzzRule, bangRule);
 
-	    for (Integer counter = 1; counter <= 200; counter++) {
+	    for (Integer counter = 1; counter <= 300; counter++) {
 	        System.out.println(getResponse(counter, rules));
         }
     }
@@ -39,6 +40,10 @@ public class Main {
 
         if (sections.isEmpty()) {
             return number.toString();
+        }
+
+        if (number % 17 == 0) {
+            Collections.reverse(sections);
         }
 
         return String.join("", sections);
