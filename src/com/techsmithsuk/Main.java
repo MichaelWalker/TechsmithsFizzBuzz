@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Main {
 
@@ -16,9 +17,9 @@ public class Main {
 
         List<Rule> rules = Arrays.asList(fizzRule, fezzRule, buzzRule, bangRule);
 
-	    for (Integer counter = 1; counter <= 300; counter++) {
-	        System.out.println(getResponse(counter, rules));
-        }
+        IntStream.rangeClosed(1, 300)
+                .mapToObj(number -> getResponse(number, rules))
+                .forEach(System.out::println);
     }
 
     private static String getResponse(Integer number, List<Rule> rules) {
