@@ -2,10 +2,7 @@ package com.techsmithsuk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Options {
     private static List<Rule> DEFAULT_RULES = Arrays.asList(
@@ -14,13 +11,13 @@ public class Options {
     );
 
     private List<Rule> rules;
-    private Integer reverseFactor;
+    private List<Integer> reverseFactors;
     private String dominantSection;
     private List<ReOrderRule> reOrderRules;
 
     public Options(String[] args) {
         this.rules = parseRules(args);
-        this.reverseFactor = parseReverseFactor(args);
+        this.reverseFactors = parseReverseFactors(args);
         this.dominantSection = parseDominantSection(args);
         this.reOrderRules = parseReOrderRules(args);
     }
@@ -29,8 +26,8 @@ public class Options {
         return rules;
     }
 
-    public Integer getReverseFactor() {
-        return reverseFactor;
+    public List<Integer> getReverseFactors() {
+        return reverseFactors;
     }
 
     public String getDominantSection() {
@@ -66,15 +63,16 @@ public class Options {
         return rules.isEmpty() ? DEFAULT_RULES : rules;
     }
 
-    private Integer parseReverseFactor(String[] args) {
+    private List<Integer> parseReverseFactors(String[] args) {
         // Expects an input of the form `--reverse=17`
+        List<Integer> factors = new ArrayList<>();
         for (String arg : args) {
             if (arg.startsWith("--reverse=")) {
                 String value = arg.replace("--reverse=", "");
-                return Integer.parseInt(value);
+                factors.add(Integer.parseInt(value));
             }
         }
-        return null;
+        return factors;
     }
 
     private String parseDominantSection(String[] args) {

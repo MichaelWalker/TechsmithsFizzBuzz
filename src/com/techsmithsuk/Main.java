@@ -22,12 +22,18 @@ public class Main {
 
         applyReOrderRules(sections, options.getReorderRules());
         sections = removeEntriesAfterDominantSection(sections, options.getDominantSection());
-
-        if (options.getReverseFactor() != null && number % options.getReverseFactor() == 0) {
-            Collections.reverse(sections);
-        }
+        reverseSectionsIfRequired(sections, number, options.getReverseFactors());
 
         return sections.isEmpty() ? number.toString() : String.join("", sections);
+    }
+
+    private static void reverseSectionsIfRequired(List<String> sections, Integer number, List<Integer> reverseFactors) {
+        for (Integer factor : reverseFactors) {
+            if (number % factor == 0) {
+                Collections.reverse(sections);
+                return;
+            }
+        }
     }
 
     private static void applyReOrderRules(List<String> sections, List<ReOrderRule> reorderRules) {
