@@ -19,6 +19,10 @@ public class Main {
     }
 
     private static String getResponse(int number, List<Rule> rules) {
+        if (number % 11 == 0) {
+            return "Bong";
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
         for (Rule rule : rules) {
             if (rule.matches(number)) {
