@@ -33,6 +33,12 @@ public class Options {
         return dominantSection;
     }
 
+    public List<ReOrderRule> getReorderRules() {
+        return List.of(
+                new ReOrderRule("FEZZ", List.of("BUZZ", "BANG", "BONG"))
+        );
+    }
+
     private List<Rule> parseRules(String[] args) {
         List<Rule> commandLineRules = Arrays.stream(args)
                 .filter(arg -> arg.startsWith("--rules="))

@@ -20,6 +20,7 @@ public class Main {
                 .sorted((a, b) -> Comparisons.isDominant(a, b, options.getDominantSection()))
                 .collect(Collectors.toList());
 
+        applyReOrderRules(sections, options.getReorderRules());
         sections = removeEntriesAfterDominantSection(sections, options.getDominantSection());
 
         if (options.getReverseFactor() != null && number % options.getReverseFactor() == 0) {
@@ -27,6 +28,27 @@ public class Main {
         }
 
         return sections.isEmpty() ? number.toString() : String.join("", sections);
+    }
+
+    private static void applyReOrderRules(List<String> sections, List<ReOrderRule> reorderRules) {
+        for (ReOrderRule reOrderRule : reorderRules) {
+            if (sections.contains(reOrderRule.getLabel())) {
+                reOrderSection(sections, reOrderRule);
+            }
+        }
+    }
+
+    private static void reOrderSection(List<String> sections, ReOrderRule rule) {
+        sections.remove(rule.getLabel());
+
+        for (int index = 0; index < sections.size(); index++) {
+            String section = sections.get(index);
+            if (rule.goesBefore(section)) {
+                sections.add(index, rule.getLabel());
+                return;
+            }
+        }
+        sections.add(rule.getLabel());
     }
 
     private static List<String> removeEntriesAfterDominantSection(List<String> sections, String dominantSection) {
