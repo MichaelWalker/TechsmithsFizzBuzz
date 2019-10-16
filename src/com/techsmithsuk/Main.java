@@ -1,6 +1,5 @@
 package com.techsmithsuk;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,8 +19,9 @@ public class Main {
     public static void main(String[] args) {
         List<Rule> rules = getRulesFromArgs(args);
         Integer reverse = getReverseFactorFromArgs(args);
+        String dominant = getDominantSectionFromArgs(args);
         IntStream.rangeClosed(1, 300)
-                .mapToObj(number -> getResponse(number, rules, reverse))
+                .mapToObj(number -> getResponse(number, rules, reverse, dominant))
                 .forEach(System.out::println);
     }
 
@@ -49,16 +49,44 @@ public class Main {
         return null;
     }
 
-    private static String getResponse(Integer number, List<Rule> rules, Integer reverseFactor) {
+    private static String getDominantSectionFromArgs(String[] args) {
+        // Expects an input of the form `--dominant=11`
+        for (String arg : args) {
+            if (arg.startsWith("--dominant=")) {
+                return arg.replace("--dominant=", "");
+            }
+        }
+        return null;
+    }
+
+    private static String getResponse(Integer number,
+                                      List<Rule> rules,
+                                      Integer reverseFactor,
+                                      String dominantSection) {
         List<String> sections = rules.stream()
                 .filter(rule -> rule.matches(number))
                 .map(Rule::getLabel)
+                .sorted((a,b) -> Comparisons.isDominant(a, b, dominantSection))
                 .collect(Collectors.toList());
 
         if (reverseFactor != null && number % reverseFactor == 0) {
             Collections.reverse(sections);
         }
 
-        return sections.isEmpty() ? number.toString() : String.join("", sections);
+        return sections.isEmpty() ? number.toString() : renderOutput(sections, dominantSection);
+    }
+
+    private static String renderOutput(List<String> sections, String dominantSection) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String section : sections) {
+            stringBuilder.append(section);
+
+            if (section.equals(dominantSection)) {
+                return stringBuilder.toString();
+            }
+        }
+
+        return stringBuilder.toString();
     }
 }
