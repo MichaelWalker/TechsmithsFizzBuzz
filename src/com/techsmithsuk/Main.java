@@ -66,11 +66,14 @@ public class Main {
         List<String> sections = rules.stream()
                 .filter(rule -> rule.matches(number))
                 .map(Rule::getLabel)
-                .sorted((a,b) -> Comparisons.isDominant(a, b, dominantSection))
                 .collect(Collectors.toList());
 
         if (reverseFactor != null && number % reverseFactor == 0) {
             Collections.reverse(sections);
+        }
+
+        if (dominantSection != null) {
+            sections.sort((a, b) -> Comparisons.isDominant(a, b, dominantSection));
         }
 
         return sections.isEmpty() ? number.toString() : renderOutput(sections, dominantSection);
